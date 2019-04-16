@@ -23,7 +23,7 @@ class SemVer():
         self.parse(instr)
 
     def __str__(self):
-        versionString = '.'.join([self.major, self.minor, self.patch])
+        versionString = '.'.join([str(self.major), str(self.minor), str(self.patch)])
         if self.prerelease:
             versionString += '-' + self.prerelease
         if self.build:
@@ -36,15 +36,63 @@ class SemVer():
     def parse(self, instr):
         reMatch = self.semverRE.match(instr)
         self.prefix = reMatch.group('prefix')
-        self.major = reMatch.group('major')
-        self.minor = reMatch.group('minor')
-        self.patch = reMatch.group('patch')
+        self.major = int(reMatch.group('major'))
+        self.minor = int(reMatch.group('minor'))
+        self.patch = int(reMatch.group('patch'))
         self.prerelease = reMatch.group('prerelease')
         self.build = reMatch.group('build')
 
-    #TODO 
-    #def __lt__(self, other):
-    #def __eq__(self, other):
+    def __lt__(self, other):
+        if self.major < other.major:
+            return True
+        elif self.minor < other.minor:
+            return True
+        elif self.patch < other.patch:
+            return True
+        elif self.prerelease is None and other.prerelease is not None:
+            #TODO This prerelease comparison is not correct.
+            #TODO It needs to account for the possible dot-separated 
+            #TODO list of fields and also mark letters higher than numbers
+            return False
+        elif self.prerelease is not None and other.prerelease is None:
+            return True
+        elif self.prerelease < other.prerelease:
+            return True
+        else:
+            return False
+    
+    def __eq__(self, other):
+        if self.major == other.major \
+                and self.minor == other.minor \
+                and self.patch == other.patch \
+                and self.prerelease == other.prerelease:
+            return True
+        else:
+            return False
+        
+    def bump(self, partString):
+        if partString == 'major':
+            self.major += 1
+            self.minor = 0
+            self.patch = 0
+            self.prerelease = None
+            self.build = None
+        elif partString == 'minor':
+            self.minor += 1
+            self.patch = 0
+            self.prerelease = None
+            self.build = None
+        elif partString == 'patch':
+            self.patch += 1
+            self.prerelease = None
+            self.build = None
+        elif partString == 'prerelease' or partString == 'build':
+            return NotImplemented
+        else:
+            raise
+
+
+
     #def __hash__(self):
         #return hash((
             #self.prefix,
