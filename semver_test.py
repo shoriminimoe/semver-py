@@ -2,7 +2,7 @@
 import semver
 import unittest
 
-class SemVerTest(unittest.TestCase):
+class TestSemVer(unittest.TestCase):
     """Semantic Versioning Module Test Class"""
 
     def setUp(self):
@@ -12,10 +12,14 @@ class SemVerTest(unittest.TestCase):
         self.sv2 = semver.SemVer(self.sv2Str)
         self.sv3Str = 'v1.2.3-alpha.0+11-gabcd123'
         self.sv3 = semver.SemVer(self.sv3Str)
-        self.sv4Str = 'v1.2.3-rc.1.0'
-        self.sv4 = semver.SemVer(self.sv4Str)
-        self.sv5Str = 'v1.2.3-rc.2.1'
-        self.sv5 = semver.SemVer(self.sv5Str)
+        self.svMajorBig = semver.SemVer('12.4.2')
+        self.svMajorSmall = semver.SemVer('1.5.8')
+        self.svMinorBig = semver.SemVer('1.9.4')
+        self.svMinorSmall = semver.SemVer('1.4.8')
+        self.svPatchBig = semver.SemVer('1.9.13')
+        self.svPatchSmall = semver.SemVer('1.9.5')
+        self.svPrerelBig = semver.SemVer('2.3.4-beta.2')
+        self.svPrerelSmall = semver.SemVer('2.3.4-alpha.0')
 
     def testStr(self):
         self.assertEqual(str(self.sv1), self.sv1Str.lstrip('v'))
@@ -49,13 +53,21 @@ class SemVerTest(unittest.TestCase):
         self.assertEqual(self.sv1.build, 'build123-42-g123abcd')
         self.assertIsNone(self.sv2.build)
     
-    def testLT(self):
-        self.assertTrue(self.sv1 < self.sv2)
-        self.assertFalse(self.sv1 < self.sv3)
-        self.assertTrue(self.sv1 < self.sv4)
-        self.assertTrue(self.sv1 < self.sv5)
-        self.assertTrue(self.sv4 < self.sv5)
+    def testLTMajor(self):
+        self.assertTrue(self.svMajorSmall < self.svMajorBig, str(self.svMajorSmall)+" is not smaller than "+str(self.svMajorBig))
+        self.assertFalse(self.svMajorBig < self.svMajorSmall, str(self.svMajorBig)+" is less than "+str(self.svMajorSmall))
+
+    def testLTMinor(self):
+        self.assertTrue(self.svMinorSmall < self.svMinorBig)
     
+    def testLTPatch(self):
+        self.assertTrue(self.svPatchSmall < self.svPatchBig)
+
+    def testLTPrerelease(self):
+        self.assertTrue(self.svPrerelSmall < self.svPrerelBig)
+        self.assertTrue(self.sv3 < self.sv2)
+        self.assertFalse(self.sv2 < self.sv3)
+
     def testEQ(self):
         self.assertTrue(self.sv1 == self.sv3)
         self.assertFalse(self.sv1 == self.sv2)
