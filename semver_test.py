@@ -12,7 +12,7 @@ class TestSemVer(unittest.TestCase):
         self.sv2 = semver.SemVer(self.sv2Str)
         self.sv3Str = 'v1.2.3-alpha.0+11-gabcd123'
         self.sv3 = semver.SemVer(self.sv3Str)
-        self.svMajorBig = semver.SemVer('12.4.2')
+        self.svMajorBig = semver.SemVer('9.4.2')
         self.svMajorSmall = semver.SemVer('1.5.8')
         self.svMinorBig = semver.SemVer('1.9.4')
         self.svMinorSmall = semver.SemVer('1.4.8')
@@ -24,6 +24,7 @@ class TestSemVer(unittest.TestCase):
     def testStr(self):
         self.assertEqual(str(self.sv1), self.sv1Str.lstrip('v'))
         self.assertEqual(str(self.sv2), self.sv2Str.lstrip('v'))
+        self.assertEqual(str(self.svMajorBig), '9.4.2')
     
     def testTag(self):
         self.assertEqual(self.sv1.tag(), self.sv1Str)
@@ -54,8 +55,8 @@ class TestSemVer(unittest.TestCase):
         self.assertIsNone(self.sv2.build)
     
     def testLTMajor(self):
-        self.assertTrue(self.svMajorSmall < self.svMajorBig, str(self.svMajorSmall)+" is not smaller than "+str(self.svMajorBig))
-        self.assertFalse(self.svMajorBig < self.svMajorSmall, str(self.svMajorBig)+" is less than "+str(self.svMajorSmall))
+        self.assertTrue(self.svMajorSmall < self.svMajorBig, str(self.svMajorSmall)+" < "+str(self.svMajorBig)+" is reporting False")
+        self.assertFalse(self.svMajorBig < self.svMajorSmall, str(self.svMajorBig)+" < "+str(self.svMajorSmall)+" is reporting True")
 
     def testLTMinor(self):
         self.assertTrue(self.svMinorSmall < self.svMinorBig)

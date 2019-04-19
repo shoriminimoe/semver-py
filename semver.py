@@ -8,7 +8,7 @@ class SemVer():
 
     semverRE = re.compile(
             r"""
-            ^(?P<prefix>(?:.*))
+            ^(?P<prefix>(?:.*))? #TODO This pattern is ambiguous. It needs to check that the first field is not all digits
             (?P<major>(?:0|[1-9]\d*))\.
             (?P<minor>(?:0|[1-9]\d*))\.
             (?P<patch>(?:0|[1-9]\d*))
@@ -45,10 +45,16 @@ class SemVer():
     def __lt__(self, other):
         if self.major < other.major:
             return True
+        elif other.major < self.major:
+            return False
         elif self.minor < other.minor:
             return True
+        elif other.minor < self.minor:
+            return False
         elif self.patch < other.patch:
             return True
+        elif other.patch < self.patch:
+            return False
         elif self.prerelease is None and other.prerelease is not None:
             #TODO This prerelease comparison is not correct.
             #TODO It needs to account for the possible dot-separated 
@@ -58,6 +64,8 @@ class SemVer():
             return True
         elif self.prerelease < other.prerelease:
             return True
+        elif other.prerelease < self.prerelease:
+            return False
         else:
             return False
     
