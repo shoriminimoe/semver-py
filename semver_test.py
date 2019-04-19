@@ -60,13 +60,23 @@ class SemVerTest(unittest.TestCase):
         self.assertTrue(self.sv1 == self.sv3)
         self.assertFalse(self.sv1 == self.sv2)
     
-    def testBump(self):
+    def testBumpMajor(self):
         self.sv1.bump('major')
         self.assertTrue(str(self.sv1), 'v2.0.0')
+
+    def testBumpMinor(self):
         self.sv1.bump('minor')
         self.assertTrue(str(self.sv1), 'v2.1.0')
+
+    def testBumpPatch(self):
         self.sv1.bump('patch')
         self.assertTrue(str(self.sv1), 'v2.1.1')
+
+    def testBumpPrerel(self):
+        self.assertTrue(self.sv1.bump('prerelease'), NotImplemented)
+
+    def testBumpBuild(self):
+        self.assertTrue(self.sv1.bump('build'), NotImplemented)
 
 if __name__ == '__main__':
     unittest.main()
