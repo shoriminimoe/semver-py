@@ -91,13 +91,3 @@ class SemVer():
         else:
             raise
 
-
-
-    #def __hash__(self):
-        #return hash((
-            #self.prefix,
-            #self.major,
-            #self.minor,
-            #self.patch,
-            #self.prerelease,
-            #self.build))
