@@ -4,4 +4,9 @@ python:
     - "3.4"
     - "3.5"
     - "3.6"
-script: python semver_test.py
+install:
+    - pip install coverage coveralls
+script:
+    - coverage run semver_test.py
+after_success:
+    - coveralls
